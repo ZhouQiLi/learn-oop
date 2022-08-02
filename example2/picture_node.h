@@ -3,7 +3,6 @@
 
 #include "picture.h"
 
-class Picture;
 class PictureNode {
     friend class Picture;
 protected:
