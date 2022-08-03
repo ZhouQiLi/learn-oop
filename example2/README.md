@@ -200,4 +200,9 @@ namespace {
 
 ### make_sheard 与 new
 
-因为继承累中的构造函数都是private的，所以make_sheard并不能访问。在example1中我们为了使用std::make_sheard来构造继承类A，需要在每个继承类中添加一个static的Create函数，再通过函数内部添加一个local的类B来public继承A，这样make_sheard才可以构造出B，再因为public继承是has-a的结构，所以在return时可以隐式转换成类A。在本例中我就偷了个懒直接使用了 **std::shared_ptr<A>(new A())** 来生成智能指针，通过查阅资料，得知两者有以下区别：
+因为继承累中的构造函数都是private的，所以make_sheard并不能访问。在example1中我们为了使用std::make_sheard来构造继承类A，需要在每个继承类中添加一个static的Create函数，再通过函数内部添加一个local的类B来public继承A，这样make_sheard才可以构造出B，再因为public继承是has-a的结构，所以在return时可以隐式转换成类A。在本例中我就偷了个懒直接使用了std::shared_ptr< A >(new A())来生成智能指针，通过查阅资料，得知两者有以下区别：
+
+> shared_ptr中共有两部分数据，1为指向原始数据的指针，2为指向计数器的指针。
+> 当使用shared_ptr< A >(new A())时候，new A操作先分配了一次内存构造对象A，在shared_ptr中会再次分配内存来构造计数器对象，共执行了两次内存分配，
+> 而make_shared只分配一块足够装下两部分数据的内存。我们都知道内存分配是会有异常的，当new A操作完后若在构造计数器对象时出错就很可能导致对象A无法释放。
+> 虽然make_shared也有一些小问题，但在能用make_shared时候尽量都用make_shared。
