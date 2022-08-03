@@ -1,8 +1,4 @@
-
-
 本用例为**字符图像**练习。
-
-
 
 ## 需求：
 
@@ -95,8 +91,6 @@ ijk |efgh|
 +----+
 ```
 
-
-
 用例中共有5个源码文件：
 
 1. picture.h & .cpp
@@ -110,8 +104,6 @@ ijk |efgh|
 3. main.cpp
    
    用于测试。
-
-
 
 ## 一些笔记
 
@@ -146,13 +138,9 @@ class B {
 
 因为指针的大小是固定的，所以此处定义class B成功。
 
-
-
 ### Picture类的拷贝构造函数和赋值操作符
 
 因为Picture只有一个成员且该成员为智能指针，所以并不需要做特殊的资源获取与释放操作，对于拷贝构造函数和赋值操作符使用自动合成的就能满足需求。
-
-
 
 ### 虚基类的权限控制
 
@@ -176,8 +164,6 @@ PictureNode为字符图像的基类，作为虚基类不想被创建对象所以
 
 将基类的虚函数设为private并不会影响类的多态，如果基类中的虚函数若不需要被继承类调用可以将函数设置为private。
 
-
-
 ### 匿名namespace
 
 ```
@@ -196,11 +182,9 @@ namespace {
 
 如《c++primer》中讲的，在文件中设置匿名namespace可以让该 namespace 中的成员具有全局唯一的名称，避免重名。匿名namespace的作用域被限制在了本文件以内，也就是外部是不可见的且无法通过extern声明来进行链接。
 
+### make_shared 与 new
 
-
-### make_sheard 与 new
-
-因为继承累中的构造函数都是private的，所以make_sheard并不能访问。在example1中我们为了使用std::make_sheard来构造继承类A，需要在每个继承类中添加一个static的Create函数，再通过函数内部添加一个local的类B来public继承A，这样make_sheard才可以构造出B，再因为public继承是has-a的结构，所以在return时可以隐式转换成类A。在本例中我就偷了个懒直接使用了std::shared_ptr< A >(new A())来生成智能指针，通过查阅资料，得知两者有以下区别：
+因为继承累中的构造函数都是private的，所以make_shared并不能访问。在example1中我们为了使用std::make_shared来构造继承类A，需要在每个继承类中添加一个static的Create函数，再通过函数内部添加一个local的类B来public继承A，这样make_shared才可以构造出B，再因为public继承是has-a的结构，所以在return时可以隐式转换成类A。在本例中我就偷了个懒直接使用了std::shared_ptr< A >(new A())来生成智能指针，通过查阅资料，得知两者有以下区别：
 
 > shared_ptr中共有两部分数据，1为指向原始数据的指针，2为指向计数器的指针。
 > 当使用shared_ptr< A >(new A())时候，new A操作先分配了一次内存构造对象A，在shared_ptr中会再次分配内存来构造计数器对象，共执行了两次内存分配，
